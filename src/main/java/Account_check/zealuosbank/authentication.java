@@ -30,7 +30,7 @@ public class authentication
   @Bean
   public WebSecurityCustomizer customurl()
   {
-    return url-> url.ignoring().requestMatchers("/zealuosbank/accountcreate");
+    return url-> url.ignoring().requestMatchers("/zealousbank/accountcreate");
   }
 
   @Bean
@@ -38,25 +38,23 @@ public class authentication
   {
     UserDetails user1=User.withUsername("tamil").password(encoder().encode("tamil123")).roles("manager").build();
     UserDetails user2=User.withUsername("kesavan").password(encoder().encode("kesavan123")).roles("owner").build();
-
-
-    
+  
     return new InMemoryUserDetailsManager(user1,user2);
   }
 
   
-@Bean
+@Bean //collection object
 @Deprecated(forRemoval = true)
   public SecurityFilterChain httpfitler(HttpSecurity hp) throws Exception
   {
     //hp.authorizeHttpRequests().anyRequest().authenticated(); //anyrequest can access
     //hp.authorizeHttpRequests().anyRequest().authenticated();// it permit all
 
-    hp.authorizeHttpRequests().requestMatchers("/zealuosbank/**")
+    hp.authorizeHttpRequests().requestMatchers("/zealousbank/**")
     .authenticated()
     .and()
     .csrf().disable()
-    .cors()
+    .cors() 
     .and()
     .httpBasic()
     .and()

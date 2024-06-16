@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,29 +21,40 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("zealuosbank")
+@RequestMapping("/zealousbank")
+@CrossOrigin(origins = "http://localhost:3000")
 public class accountcontroller 
-
-
-
 
 { 
   @Autowired
   accountservice service;
-  
-  public PasswordEncoder coder()
+
+  public PasswordEncoder encoder()
   {
     return new BCryptPasswordEncoder();
   }
-  
+   @GetMapping("/")
+   public void run()
+   {
+    System.out.println("welcome to zealous bank regisert .....");
+   }
+
+   @GetMapping("/{user}")
+   public accountentity purpose(@PathVariable("user")String user)
+   {
+    accountentity acconut1=(accountentity) service.loadUserByUsername(user);
+    return acconut1;
+   }
 
   @PostMapping("/accountcreate")
   public String accountcreate(@RequestBody accountentity accountdetails)
   {
+    accountdetails.setPassword(encoder().encode(accountdetails.getPassword()));
+
     return service.creation(accountdetails).getAccountHoldername()+"has been created succesfully";
   }
 
-  @GetMapping("/allacc")
+  @GetMapping("/allaccount")
   public List<accountentity> alldetails() 
   {
     return service.allaccountholders();
@@ -112,7 +124,7 @@ public class accountcontroller
 
     return tservice.createtransaction(transationdetails);
   }
-  @GetMapping("getalltransation")
+  @GetMapping("/getalltransation")
   public List<transationentity>getAlltransation()
   {
     return tservice.listalltransaction();
